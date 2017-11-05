@@ -326,7 +326,7 @@ public class Spiel
       { boolean maffinImRaum=false;
           if(!befehl.hatZweitesWort()) 
           {
-          System.out.println("Sie sind ein Fressack, än Guete!");
+          System.out.println("Sie sind ein Fresssack, än Guete!");
         } else if (!befehl.gibZweitesWort().equalsIgnoreCase("maffin"))
         {
             sagenDassBefehlUnbekannt();
@@ -337,6 +337,7 @@ public class Spiel
                 if (spieler1.gibAktuellenRaum().gibGegenstände().get(i).getGegenstandBeschreibung().equalsIgnoreCase(befehl.gibZweitesWort()))
                 {
                    spieler1.setzeNeueTragkraft();
+                   spieler1.gegenstandAufnehmen(spieler1.gibAktuellenRaum().gibGegenstände().get(i));
                    maffinImRaum=true;
  
                 }
