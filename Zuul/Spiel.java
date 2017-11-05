@@ -201,7 +201,7 @@ public class Spiel
                   zweitesWortBekannt=true;
                 }
             }
-        } if (zweitesWortBekannt==false&&!spieler1.gibAktuellenRaum().gibGegenstände().isEmpty()&&!befehl.gibZweitesWort().equalsIgnoreCase("maffin"))
+        } if (befehl.hatZweitesWort()&&zweitesWortBekannt==false&&!spieler1.gibAktuellenRaum().gibGegenstände().isEmpty()&&!befehl.gibZweitesWort().equalsIgnoreCase("maffin"))
                  {
                     System.out.println("Diesen Gegenstand gibt es hier nicht.");
                 }
@@ -227,11 +227,11 @@ public class Spiel
                 } 
             }
         } 
-        if (zweitesWortBekannt==false&&!spieler1.gibmeineGegenstaende().isEmpty())
+        if (befehl.hatZweitesWort()&&zweitesWortBekannt==false&&!spieler1.gibmeineGegenstaende().isEmpty())
                 {
                     System.out.println("Diesen Gegenstand gibt es nicht.");
                 }
-                if (befehl.gibZweitesWort().equalsIgnoreCase("maffin"))
+                if (befehl.hatZweitesWort()&&befehl.gibZweitesWort().equalsIgnoreCase("maffin"))
                 {
                     System.out.println("Ein Maffin kann nicht mehr abgelegt werden.");
                 }
