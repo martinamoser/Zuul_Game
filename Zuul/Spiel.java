@@ -220,7 +220,7 @@ public class Spiel
             else {
             for (int i=0; i<spieler1.gibmeineGegenstaende().size(); i++)
             {
-                if (spieler1.gibmeineGegenstaende().get(i).getGegenstandBeschreibung().equalsIgnoreCase(befehl.gibZweitesWort()))
+                if (spieler1.gibmeineGegenstaende().get(i).getGegenstandBeschreibung().equalsIgnoreCase(befehl.gibZweitesWort())&&befehl.gibZweitesWort().equalsIgnoreCase("maffin"));
                 {
                   spieler1.gegenstandAblegen(spieler1.gibmeineGegenstaende().get(i));
                   zweitesWortBekannt=true;
