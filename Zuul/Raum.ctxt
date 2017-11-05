@@ -1,0 +1,25 @@
+#BlueJ class context
+comment0.target=Raum
+comment0.text=\r\n\ Diese\ Klasse\ modelliert\ R\u00E4ume\ in\ der\ Welt\ von\ Zuul.\r\n\ \r\n\ Ein\ "Raum"\ repr\u00E4sentiert\ einen\ Ort\ in\ der\ virtuellen\ Landschaft\ des\r\n\ Spiels.\ Ein\ Raum\ ist\ mit\ anderen\ R\u00E4umen\ \u00FCber\ Ausg\u00E4nge\ verbunden.\r\n\ M\u00F6gliche\ Ausg\u00E4nge\ liegen\ im\ Norden,\ Osten,\ S\u00FCden\ und\ Westen.\r\n\ F\u00FCr\ jede\ Richtung\ h\u00E4lt\ ein\ Raum\ eine\ Referenz\ auf\ den\ \r\n\ benachbarten\ Raum.\r\n\ \r\n\ @author\ \ Michael\ K\u00F6lling\ und\ David\ J.\ Barnes\r\n\ @version\ 31.07.2011\r\n
+comment1.params=beschreibung
+comment1.target=Raum(java.lang.String)
+comment1.text=\r\n\ Erzeuge\ einen\ Raum\ mit\ einer\ Beschreibung.\ Ein\ Raum\r\n\ hat\ anfangs\ keine\ Ausg\u00E4nge.\r\n\ @param\ beschreibung\ enth\u00E4lt\ eine\ Beschreibung\ in\ der\ Form\r\n\ \ \ \ \ \ \ \ "in\ einer\ K\u00FCche"\ oder\ "auf\ einem\ Sportplatz".\r\n
+comment2.params=richtung\ nachbar
+comment2.target=void\ setzeAusgaenge(java.lang.String,\ Raum)
+comment2.text=\r\n\ Definiere\ die\ Ausg\u00E4nge\ dieses\ Raums.\ Jede\ Richtung\r\n\ f\u00FChrt\ entweder\ in\ einen\ anderen\ Raum\ oder\ ist\ 'null'\r\n\ (kein\ Ausgang).\r\n\ @param\ norden\ Der\ Nordausgang.\r\n\ @param\ osten\ Der\ Ostausgang.\r\n\ @param\ sueden\ Der\ S\u00FCdausgang.\r\n\ @param\ westen\ Der\ Westausgang.\r\n
+comment3.params=gegenstand
+comment3.target=void\ setzeGegenst\u00E4nde(Gegenstand)
+comment4.params=
+comment4.target=java.util.ArrayList\ gibGegenst\u00E4nde()
+comment5.params=
+comment5.target=java.lang.String\ gibBeschreibung()
+comment5.text=\r\n\ @return\ die\ Beschreibung\ dieses\ Raums.\r\n
+comment6.params=richtung
+comment6.target=Raum\ gibAusgang(java.lang.String)
+comment7.params=
+comment7.target=java.lang.String\ gibAusgaengeAlsString()
+comment8.params=
+comment8.target=java.lang.String\ gibGegenstandRaumAlsString()
+comment9.params=
+comment9.target=java.lang.String\ gibLangeBeschreibung()
+numComments=10
