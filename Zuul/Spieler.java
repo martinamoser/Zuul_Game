@@ -113,7 +113,7 @@ public class Spieler
      {
          int muffinBonus=10;
          tragkraft+=muffinBonus;
-         System.out.println("Juhu, Gratulation, mit dem Maffin-Bonus beträgt deine Tragkraft neu "+tragkraft+" Einheiten!");
+         System.out.println("Juhu, Gratulation, mit dem Muffin-Bonus beträgt deine Tragkraft neu "+tragkraft+" Einheiten!");
         }
    
 }

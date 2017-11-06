@@ -72,7 +72,7 @@ public class Spiel
         labor.setzeAusgaenge("east", buero);
         buero.setzeAusgaenge("west", labor);
         
-        spieler1 = new Spieler ("Hansi", 6); 
+        spieler1 = new Spieler ("Hansi", 20); 
         spieler1.setzeAktuellenRaum(draussen);
 
         
@@ -201,7 +201,7 @@ public class Spiel
                   zweitesWortBekannt=true;
                 }
             }
-        } if (befehl.hatZweitesWort()&&zweitesWortBekannt==false&&!spieler1.gibAktuellenRaum().gibGegenstände().isEmpty()&&!befehl.gibZweitesWort().equalsIgnoreCase("maffin"))
+        } if (zweitesWortBekannt==false&&!spieler1.gibAktuellenRaum().gibGegenstände().isEmpty()&&!befehl.gibZweitesWort().equalsIgnoreCase("maffin"))
                  {
                     System.out.println("Diesen Gegenstand gibt es hier nicht.");
                 }
@@ -220,18 +220,18 @@ public class Spiel
             else {
             for (int i=0; i<spieler1.gibmeineGegenstaende().size(); i++)
             {
-                if (spieler1.gibmeineGegenstaende().get(i).getGegenstandBeschreibung().equalsIgnoreCase(befehl.gibZweitesWort())&&befehl.gibZweitesWort().equalsIgnoreCase("maffin"));
+                if (spieler1.gibmeineGegenstaende().get(i).getGegenstandBeschreibung().equalsIgnoreCase(befehl.gibZweitesWort()))
                 {
                   spieler1.gegenstandAblegen(spieler1.gibmeineGegenstaende().get(i));
                   zweitesWortBekannt=true;
                 } 
             }
         } 
-        if (befehl.hatZweitesWort()&&zweitesWortBekannt==false&&!spieler1.gibmeineGegenstaende().isEmpty())
+        if (zweitesWortBekannt==false&&!spieler1.gibmeineGegenstaende().isEmpty())
                 {
                     System.out.println("Diesen Gegenstand gibt es nicht.");
                 }
-                if (befehl.hatZweitesWort()&&befehl.gibZweitesWort().equalsIgnoreCase("maffin"))
+                if (befehl.gibZweitesWort().equalsIgnoreCase("maffin"))
                 {
                     System.out.println("Ein Maffin kann nicht mehr abgelegt werden.");
                 }
@@ -326,7 +326,7 @@ public class Spiel
       { boolean maffinImRaum=false;
           if(!befehl.hatZweitesWort()) 
           {
-          System.out.println("Sie sind ein Fresssack, än Guete!");
+          System.out.println("Sie sind ein Fressack, än Guete!");
         } else if (!befehl.gibZweitesWort().equalsIgnoreCase("maffin"))
         {
             sagenDassBefehlUnbekannt();
@@ -337,7 +337,6 @@ public class Spiel
                 if (spieler1.gibAktuellenRaum().gibGegenstände().get(i).getGegenstandBeschreibung().equalsIgnoreCase(befehl.gibZweitesWort()))
                 {
                    spieler1.setzeNeueTragkraft();
-                   spieler1.gegenstandAufnehmen(spieler1.gibAktuellenRaum().gibGegenstände().get(i));
                    maffinImRaum=true;
  
                 }
