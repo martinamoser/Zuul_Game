@@ -15,7 +15,7 @@ public class Spieler
     private Raum aktuellerRaum;
     //private Raum ehemaligerRaum;
     private Raum naechsterRaum;
-    private Stack<Raum> ehemaligeRaeume;
+    private Stack<Befehl> undoStack;
 
     /**
      * Konstruktor für Objekte der Klasse Spieler
@@ -27,7 +27,7 @@ public class Spieler
         meineGegenstaende= new ArrayList<Gegenstand>();
         aktuellerRaum = null;  // das Spiel startet draussen
         naechsterRaum = null;
-        ehemaligeRaeume = new Stack<Raum>();
+        undoStack = new Stack<Befehl>();
         //ehemaligerRaum = draussen; // zurück zurück führt nach draussen
     }
 
@@ -57,9 +57,9 @@ public class Spieler
     {
         aktuellerRaum=raum;
     }
-    public Stack<Raum> gibehemaligeRaeume()
+    public Stack<Befehl> gibundoStack()
     {
-        return ehemaligeRaeume;
+        return undoStack;
     }
     public ArrayList<Gegenstand> gibmeineGegenstaende()
     {
@@ -115,5 +115,32 @@ public class Spieler
          tragkraft+=muffinBonus;
          System.out.println("Juhu, Gratulation, mit dem Muffin-Bonus beträgt deine Tragkraft neu "+tragkraft+" Einheiten!");
         }
-   
+     public boolean take(String gegenstand)
+     {  
+        ArrayList<Gegenstand> liste = aktuellerRaum.gibGegenstände();
+        if(liste.isEmpty())
+        {
+              System.out.println("In diesem Raum hat es momentan keine Gegenstände, "+spielername +".");
+              return false  ;
+        }
+        
+        
+        for (Gegenstand g: liste)
+        {
+            if (g.getGegenstandBeschreibung().equalsIgnoreCase(gegenstand))
+            {
+                if(tragkraft<gibGewichtListeGegenstände()+g.getGewicht())
+                {
+                     System.out.println("Der Gegenstand ist zu schwer.");
+                     return false;
+                }
+                
+                gegenstandAufnehmen(g);
+                return true;  
+            }
+        }
+
+        System.out.println("Diesen Gegenstand gibt es hier nicht.");   
+        return false;
+    }
 }

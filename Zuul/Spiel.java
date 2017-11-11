@@ -1,4 +1,5 @@
 import java.util.Stack;
+import java.util.HashMap;
 /**
  *  Dies ist die Hauptklasse der Anwendung "Die Welt von Zuul".
  *  "Die Welt von Zuul" ist ein sehr einfaches, textbasiertes
@@ -20,9 +21,10 @@ import java.util.Stack;
 
 public class Spiel 
 {
+    private HashMap<String, String> map;
     private Parser parser;
 
-    private Spieler spieler1;
+    private Spieler spieler;
     
         
     /**
@@ -30,6 +32,11 @@ public class Spiel
      */
     public Spiel() 
     {
+        map = new HashMap<>();
+        map.put("north", "south");
+        map.put("south", "north");
+        map.put("west", "east");
+        map.put("east", "west");
         raeumeAnlegen();
         parser = new Parser();
         
@@ -57,8 +64,9 @@ public class Spiel
         labor.setzeGegenstände(new Gegenstand("Grabstein", 15));
         buero.setzeGegenstände(new Gegenstand("Schaufel", 4));
         cafeteria.setzeGegenstände(new Gegenstand("Pistole", 10));
-        hoersaal.setzeGegenstände(new Gegenstand("Maffin", 0));
+        
         hoersaal.setzeGegenstände(new Gegenstand("Säbel", 4));
+        hoersaal.setzeGegenstände(new MagischerGegenstand("Muffin", 0, "erhöhtTragkraft"));
         
         
         // die Ausgänge initialisieren
@@ -72,8 +80,8 @@ public class Spiel
         labor.setzeAusgaenge("east", buero);
         buero.setzeAusgaenge("west", labor);
         
-        spieler1 = new Spieler ("Hansi", 20); 
-        spieler1.setzeAktuellenRaum(draussen);
+        spieler = new Spieler ("Hansi", 20); 
+        spieler.setzeAktuellenRaum(draussen);
 
         
     }
@@ -104,7 +112,7 @@ public class Spiel
     private void willkommenstextAusgeben()
     {
         System.out.println();
-        System.out.println(spieler1.gibNameSpieler()+", willkommen zu Zuul!");
+        System.out.println(spieler.gibNameSpieler()+", willkommen zu Zuul!");
         System.out.println("Zuul ist ein neues, unglaublich langweiliges Spiel.");
         System.out.println("Tippen sie 'help', wenn Sie Hilfe brauchen.");
         System.out.println();
@@ -117,7 +125,7 @@ public class Spiel
      * @param befehl Der zu verarbeitende Befehl.
      * @return 'true', wenn der Befehl das Spiel beendet, 'false' sonst.
      */
-    public boolean verarbeiteBefehl(Befehl befehl) 
+    public boolean verarbeiteBefehl(Befehl befehl,boolean undo) 
     {
         boolean moechteBeenden = false;
 
@@ -130,7 +138,7 @@ public class Spiel
             hilfstextAusgeben();
         }
         else if (befehlswort.equals("go")) {
-            wechsleRaum(befehl);
+            wechsleRaum(befehl,undo);
         }
         else if (befehlswort.equals("quit")) {
             moechteBeenden = beenden(befehl);
@@ -142,22 +150,45 @@ public class Spiel
         essen(befehl);
         }
         else if (befehlswort.equals("back")) {
-        zurückgehen(befehl);    
+            Stack<Befehl> stack = spieler.gibundoStack() ;
+            
+            if( stack.size() > 0 )
+            {
+               verarbeiteBefehl(stack.pop(),true);
+            }
+            else
+            { 
+                System.out.println("Sie sind wieder am Anfang des Spiels!");
+            }
+            
         }
         else if (befehlswort.equals("take")) {
-        take(befehl);
+        take(befehl,undo);
         }
         else if (befehlswort.equals("drop")) {
-        drop(befehl);
+        drop(befehl,undo);
         }
         else if (befehlswort.equals("status")) {
-        spieler1.gibListeMeinerGegenstaende();
-        spieler1.dasGesamtgewichtBeträgt();
+        spieler.gibListeMeinerGegenstaende();
+        spieler.dasGesamtgewichtBeträgt();
+        }
+        else if (befehlswort.equals("muffin")) {
+        
+        }
+        
+        for( Befehl b : spieler.gibundoStack() )
+        {
+            System.out.println( b.gibBefehlswort() + " " + b.gibZweitesWort() ) ;
         }
         
         return moechteBeenden;
     }
 
+    public boolean verarbeiteBefehl(Befehl befehl) 
+    {
+        return verarbeiteBefehl( befehl, false ) ;
+    }
+    
     // Implementierung der Benutzerbefehle:
 
     /**
@@ -173,68 +204,50 @@ public class Spiel
         System.out.println("Ihnen stehen folgende Befehle zur Verfügung:");
         parser.zeigeBefehle();
     }
-    private void take(Befehl befehl)
+    private void take(Befehl befehl,boolean undo)
     {
         boolean zweitesWortBekannt=false;
         if(!befehl.hatZweitesWort()) {
             sagenDassBefehlUnbekannt();
-            }  else if (spieler1.gibAktuellenRaum().gibGegenstände().isEmpty())
-                {
-                    System.out.println("In diesem Raum hat es momentan keine Gegenstände, "+spieler1.gibNameSpieler());
-                } 
-                else if (befehl.gibZweitesWort().equalsIgnoreCase("maffin"))
-                {
-                    System.out.println("Ein Maffin ist kein gewöhnlicher Gegenstand, benützen Sie den Befehl: eat Maffin!");
-                }
-                
-                 else {
-            for (int i=0; i<spieler1.gibAktuellenRaum().gibGegenstände().size(); i++)
-            {
-                if (spieler1.gibAktuellenRaum().gibGegenstände().get(i).getGegenstandBeschreibung().equalsIgnoreCase(befehl.gibZweitesWort()))
-                {
-                    if(spieler1.gibTragkraft()<spieler1.gibGewichtListeGegenstände()+spieler1.gibAktuellenRaum().gibGegenstände().get(i).getGewicht())
-                    {
-                        System.out.println("Der Gegenstand ist zu schwer.");
-                        
-                    } else
-                  spieler1.gegenstandAufnehmen(spieler1.gibAktuellenRaum().gibGegenstände().get(i));
-                  zweitesWortBekannt=true;
-                }
-            }
-        } if (zweitesWortBekannt==false&&!spieler1.gibAktuellenRaum().gibGegenstände().isEmpty()&&!befehl.gibZweitesWort().equalsIgnoreCase("maffin"))
-                 {
-                    System.out.println("Diesen Gegenstand gibt es hier nicht.");
-                }
+        } else {
+        if(spieler.take(befehl.gibZweitesWort()) && !undo)
+        spieler.gibundoStack().push( new Befehl("drop",befehl.gibZweitesWort()) ) ;
+            } 
+
     }
     
-        private void drop(Befehl befehl)
+        private void drop(Befehl befehl,boolean undo)
     {
         boolean zweitesWortBekannt=false;
         if(!befehl.hatZweitesWort()) {
             sagenDassBefehlUnbekannt();
-        } else if(spieler1.gibmeineGegenstaende().isEmpty())
+        } else if(spieler.gibmeineGegenstaende().isEmpty())
         {
-            System.out.println(spieler1.gibNameSpieler()+", du hast im Moment gar keine Gegenstände.");
+            System.out.println(spieler.gibNameSpieler()+", du hast im Moment gar keine Gegenstände.");
         }
         //wenn der Befehl gültig ist, testen, ob Gegenstand zu schwer
             else {
-            for (int i=0; i<spieler1.gibmeineGegenstaende().size(); i++)
+            for (int i=0; i<spieler.gibmeineGegenstaende().size(); i++)
             {
-                if (spieler1.gibmeineGegenstaende().get(i).getGegenstandBeschreibung().equalsIgnoreCase(befehl.gibZweitesWort()))
+                if (spieler.gibmeineGegenstaende().get(i).getGegenstandBeschreibung().equalsIgnoreCase(befehl.gibZweitesWort()))
                 {
-                  spieler1.gegenstandAblegen(spieler1.gibmeineGegenstaende().get(i));
+                  spieler.gegenstandAblegen(spieler.gibmeineGegenstaende().get(i));
+                  if( !undo )
+                  {
+                     spieler.gibundoStack().push( new Befehl("take",befehl.gibZweitesWort()) ) ;
+                  }
                   zweitesWortBekannt=true;
                 } 
             }
         } 
-        if (zweitesWortBekannt==false&&!spieler1.gibmeineGegenstaende().isEmpty())
+        if (zweitesWortBekannt==false&&!spieler.gibmeineGegenstaende().isEmpty())
                 {
                     System.out.println("Diesen Gegenstand gibt es nicht.");
                 }
-                if (befehl.gibZweitesWort().equalsIgnoreCase("maffin"))
+               /* if (befehl.gibZweitesWort().equalsIgnoreCase("maffin"))
                 {
                     System.out.println("Ein Maffin kann nicht mehr abgelegt werden.");
-                }
+                } */
     }
 
     /**
@@ -242,7 +255,7 @@ public class Spiel
      * wechsele in den neuen Raum, ansonsten gib eine Fehlermeldung
      * aus.
      */
-    private void wechsleRaum(Befehl befehl) 
+    private void wechsleRaum(Befehl befehl,boolean undo) 
     {
         if(!befehl.hatZweitesWort()) {
             // Gibt es kein zweites Wort, wissen wir nicht, wohin...
@@ -253,49 +266,54 @@ public class Spiel
         String richtung = befehl.gibZweitesWort();
 
         // Wir versuchen, den Raum zu verlassen.
-        spieler1.setzeNaechstenRaum(spieler1.gibAktuellenRaum().gibAusgang(richtung));
+        spieler.setzeNaechstenRaum(spieler.gibAktuellenRaum().gibAusgang(richtung));
 
-        if (spieler1.gibNaechstenRaum() == null) {
+        if (spieler.gibNaechstenRaum() == null) {
             System.out.println("Dort ist keine Tür!");
         }
         else {
             
             //ehemaligerRaum = aktuellerRaum; //ehemaligerRaum für back speichern
-            spieler1.gibehemaligeRaeume().push(spieler1.gibAktuellenRaum());
-            spieler1.setzeAktuellenRaum(spieler1.gibNaechstenRaum());
+            if( !undo )
+            {
+                spieler.gibundoStack().push(new Befehl("go", map.get(richtung) ));
+            }
+            spieler.setzeAktuellenRaum(spieler.gibNaechstenRaum());
             //System.out.println(richtung);
             raumInfoAusgeben();
            
             }
             
         }
+        
+        /*
         public void zurückgehen(Befehl befehl)
         {        
             if(befehl.hatZweitesWort()) 
             {
             sagenDassBefehlUnbekannt();
             } else
-            { if (spieler1.gibehemaligeRaeume().empty())
+            { if (spieler.gibehemaligeRaeume().empty())
                 {
                     System.out.println("Sie befinden sich wieder am Anfang des Spiels");
                 } else
                 {
-                    spieler1.setzeAktuellenRaum(spieler1.gibehemaligeRaeume().pop());
+                    spieler.setzeAktuellenRaum(spieler.gibehemaligeRaeume().pop());
                     raumInfoAusgeben();
                 }
             }
                
             
             
-            /* else {
+             else {
               aktuellerRaum=ehemaligerRaum;
               raumInfoAusgeben();
-            } */
+            } 
             
-        }
+        } */
         private void raumInfoAusgeben()
         {
-        System.out.println(spieler1.gibAktuellenRaum().gibLangeBeschreibung());
+        System.out.println(spieler.gibAktuellenRaum().gibLangeBeschreibung());
         
     }
 
@@ -317,7 +335,7 @@ public class Spiel
     
     public void umsehen()
     {
-        System.out.println(spieler1.gibAktuellenRaum().gibLangeBeschreibung());
+        System.out.println(spieler.gibAktuellenRaum().gibLangeBeschreibung());
     }
     //Befehl eat oder eat muffin
     
@@ -327,16 +345,18 @@ public class Spiel
           if(!befehl.hatZweitesWort()) 
           {
           System.out.println("Sie sind ein Fressack, än Guete!");
-        } else if (!befehl.gibZweitesWort().equalsIgnoreCase("maffin"))
+        } 
+        /*
+        else if (!befehl.gibZweitesWort().equalsIgnoreCase("maffin"))
         {
             sagenDassBefehlUnbekannt();
         } else
         {
-            for (int i=0; i<spieler1.gibAktuellenRaum().gibGegenstände().size(); i++)
+            for (int i=0; i<spieler.gibAktuellenRaum().gibGegenstände().size(); i++)
             {//falls das Magic Maffin im Raum ist:
-                if (spieler1.gibAktuellenRaum().gibGegenstände().get(i).getGegenstandBeschreibung().equalsIgnoreCase(befehl.gibZweitesWort()))
+                if (spieler.gibAktuellenRaum().gibGegenstände().get(i).getGegenstandBeschreibung().equalsIgnoreCase(befehl.gibZweitesWort()))
                 {
-                   spieler1.setzeNeueTragkraft();
+                   spieler.setzeNeueTragkraft();
                    maffinImRaum=true;
  
                 }
@@ -346,7 +366,7 @@ public class Spiel
                     System.out.println("Sorry, hier gibt es kein Maffin!");
                 }
          }
-
+*/
     }
     
     
