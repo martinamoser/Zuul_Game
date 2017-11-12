@@ -64,9 +64,10 @@ public class Spiel
         labor.setzeGegenstände(new Gegenstand("Grabstein", 15));
         buero.setzeGegenstände(new Gegenstand("Schaufel", 4));
         cafeteria.setzeGegenstände(new Gegenstand("Pistole", 10));
+       
         
         hoersaal.setzeGegenstände(new Gegenstand("Säbel", 4));
-        hoersaal.setzeGegenstände(new MagischerGegenstand("Muffin", 0, "erhöhtTragkraft"));
+        hoersaal.setzeGegenstände(new MagischerGegenstand("Muffin", -10, "Erhöht Tragkraft um 10 Einheiten"));
         
         
         // die Ausgänge initialisieren
@@ -172,14 +173,13 @@ public class Spiel
         spieler.gibListeMeinerGegenstaende();
         spieler.dasGesamtgewichtBeträgt();
         }
-        else if (befehlswort.equals("muffin")) {
         
-        }
-        
+        /*
         for( Befehl b : spieler.gibundoStack() )
         {
             System.out.println( b.gibBefehlswort() + " " + b.gibZweitesWort() ) ;
         }
+        */
         
         return moechteBeenden;
     }
@@ -221,33 +221,12 @@ public class Spiel
         boolean zweitesWortBekannt=false;
         if(!befehl.hatZweitesWort()) {
             sagenDassBefehlUnbekannt();
-        } else if(spieler.gibmeineGegenstaende().isEmpty())
-        {
-            System.out.println(spieler.gibNameSpieler()+", du hast im Moment gar keine Gegenstände.");
+        } else {
+            if(spieler.drop(befehl.gibZweitesWort()) && !undo)
+            spieler.gibundoStack().push( new Befehl("take", befehl.gibZweitesWort()));
         }
-        //wenn der Befehl gültig ist, testen, ob Gegenstand zu schwer
-            else {
-            for (int i=0; i<spieler.gibmeineGegenstaende().size(); i++)
-            {
-                if (spieler.gibmeineGegenstaende().get(i).getGegenstandBeschreibung().equalsIgnoreCase(befehl.gibZweitesWort()))
-                {
-                  spieler.gegenstandAblegen(spieler.gibmeineGegenstaende().get(i));
-                  if( !undo )
-                  {
-                     spieler.gibundoStack().push( new Befehl("take",befehl.gibZweitesWort()) ) ;
-                  }
-                  zweitesWortBekannt=true;
-                } 
-            }
-        } 
-        if (zweitesWortBekannt==false&&!spieler.gibmeineGegenstaende().isEmpty())
-                {
-                    System.out.println("Diesen Gegenstand gibt es nicht.");
-                }
-               /* if (befehl.gibZweitesWort().equalsIgnoreCase("maffin"))
-                {
-                    System.out.println("Ein Maffin kann nicht mehr abgelegt werden.");
-                } */
+        
+
     }
 
     /**
@@ -285,37 +264,6 @@ public class Spiel
             }
             
         }
-        
-        /*
-        public void zurückgehen(Befehl befehl)
-        {        
-            if(befehl.hatZweitesWort()) 
-            {
-            sagenDassBefehlUnbekannt();
-            } else
-            { if (spieler.gibehemaligeRaeume().empty())
-                {
-                    System.out.println("Sie befinden sich wieder am Anfang des Spiels");
-                } else
-                {
-                    spieler.setzeAktuellenRaum(spieler.gibehemaligeRaeume().pop());
-                    raumInfoAusgeben();
-                }
-            }
-               
-            
-            
-             else {
-              aktuellerRaum=ehemaligerRaum;
-              raumInfoAusgeben();
-            } 
-            
-        } */
-        private void raumInfoAusgeben()
-        {
-        System.out.println(spieler.gibAktuellenRaum().gibLangeBeschreibung());
-        
-    }
 
     /**
      * "quit" wurde eingegeben. Überprüfe den Rest des Befehls,

@@ -24,7 +24,7 @@ public class Spieler
     {
         spielername=name;
         tragkraft=kraft;
-        meineGegenstaende= new ArrayList<Gegenstand>();
+        meineGegenstaende= new ArrayList<>();
         aktuellerRaum = null;  // das Spiel startet draussen
         naechsterRaum = null;
         undoStack = new Stack<Befehl>();
@@ -108,16 +108,10 @@ public class Spieler
      {
          System.out.println("Das Gesamtgewicht beträgt: "+gibGewichtListeGegenstände()+ " Einheiten.");
         }
-        
-     public void setzeNeueTragkraft()
-     {
-         int muffinBonus=10;
-         tragkraft+=muffinBonus;
-         System.out.println("Juhu, Gratulation, mit dem Muffin-Bonus beträgt deine Tragkraft neu "+tragkraft+" Einheiten!");
-        }
+
      public boolean take(String gegenstand)
      {  
-        ArrayList<Gegenstand> liste = aktuellerRaum.gibGegenstände();
+        ArrayList<? extends Gegenstand> liste = aktuellerRaum.gibGegenstände();
         if(liste.isEmpty())
         {
               System.out.println("In diesem Raum hat es momentan keine Gegenstände, "+spielername +".");
@@ -143,4 +137,25 @@ public class Spieler
         System.out.println("Diesen Gegenstand gibt es hier nicht.");   
         return false;
     }
+    public boolean drop(String gegenstand)
+    {
+        if(gibmeineGegenstaende().isEmpty())
+        {
+            System.out.println(spielername+", du hast im Moment gar keine Gegenstände.");
+            return false;
+        }
+        for (int i=0; i<gibmeineGegenstaende().size(); i++)
+        {
+                if (gibmeineGegenstaende().get(i).getGegenstandBeschreibung().equalsIgnoreCase(gegenstand))
+                {
+                  gegenstandAblegen(gibmeineGegenstaende().get(i));
+                  return true;
+                } 
+        }
+        {
+                    System.out.println("Diesen Gegenstand gibt es nicht.");
+                    return false;
+        }
+    }
 }
+    
