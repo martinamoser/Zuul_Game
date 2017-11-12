@@ -67,7 +67,7 @@ public class Spiel
        
         
         hoersaal.setzeGegenstände(new Gegenstand("Säbel", 4));
-        hoersaal.setzeGegenstände(new MagischerGegenstand("Muffin", -10, "ErhöhtTragkraft um 10 Einheiten"));
+        hoersaal.setzeGegenstände(new MagischerGegenstand("Muffin", -10, "Erhöht Tragkraft um 10 Einheiten"));
         
         
         // die Ausgänge initialisieren
@@ -221,34 +221,12 @@ public class Spiel
         boolean zweitesWortBekannt=false;
         if(!befehl.hatZweitesWort()) {
             sagenDassBefehlUnbekannt();
-        } 
-        
-        /*
-        else if(spieler.gibmeineGegenstaende().isEmpty())
-        {
-            System.out.println(spieler.gibNameSpieler()+", du hast im Moment gar keine Gegenstände.");
+        } else {
+            if(spieler.drop(befehl.gibZweitesWort()) && !undo)
+            spieler.gibundoStack().push( new Befehl("take", befehl.gibZweitesWort()) );
         }
-        //wenn der Befehl gültig ist, testen, ob Gegenstand zu schwer
-            else {
-            for (int i=0; i<spieler.gibmeineGegenstaende().size(); i++)
-            {
-                if (spieler.gibmeineGegenstaende().get(i).getGegenstandBeschreibung().equalsIgnoreCase(befehl.gibZweitesWort()))
-                {
-                  spieler.gegenstandAblegen(spieler.gibmeineGegenstaende().get(i));
-                  if( !undo )
-                  {
-                     spieler.gibundoStack().push( new Befehl("take",befehl.gibZweitesWort()) ) ;
-                  }
-                  zweitesWortBekannt=true;
-                } 
-            }
-        } 
-        if (zweitesWortBekannt==false&&!spieler.gibmeineGegenstaende().isEmpty())
-                {
-                    System.out.println("Diesen Gegenstand gibt es nicht.");
-                }
-    */
-    }
+        
+   }
 
     /**
      * Versuche, in eine Richtung zu gehen. Wenn es einen Ausgang gibt,

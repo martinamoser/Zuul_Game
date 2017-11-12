@@ -111,7 +111,7 @@ public class Spieler
 
      public boolean take(String gegenstand)
      {  
-        ArrayList<? extends Gegenstand> liste = aktuellerRaum.gibGegenstände();
+        ArrayList<Gegenstand> liste = aktuellerRaum.gibGegenstände();
         if(liste.isEmpty())
         {
               System.out.println("In diesem Raum hat es momentan keine Gegenstände, "+spielername +".");
@@ -130,6 +130,10 @@ public class Spieler
                 }
                 
                 gegenstandAufnehmen(g);
+                if(g.getGegenstandBeschreibung().equalsIgnoreCase("muffin"))
+                {
+                    System.out.println("Gratulation "+spielername+", du hast das magische Muffin gefunden!");
+                }
                 return true;  
             }
         }
