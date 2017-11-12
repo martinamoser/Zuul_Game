@@ -165,6 +165,11 @@ public class Spieler
     public boolean go(String richtung)
     {
          // Wir versuchen, den Raum zu verlassen.
+         if(aktuellerRaum.gibBeschreibung().equalsIgnoreCase("im Keller"))
+         {
+             System.out.println("Sie kommen hier nicht mehr raus!");
+             return false;
+         } else {
         setzeNaechstenRaum(gibAktuellenRaum().gibAusgang(richtung));
 
         if (gibNaechstenRaum() == null) {
@@ -185,8 +190,9 @@ public class Spieler
             return true;
             }
         }
-            
-        }
+    }
+    
+    }
         public void raumInfoAusgeben()
         {
         System.out.println(gibAktuellenRaum().gibLangeBeschreibung());
