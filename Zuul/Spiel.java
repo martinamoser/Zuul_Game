@@ -248,6 +248,7 @@ public class Spiel
 
         if (spieler.gibNaechstenRaum() == null) {
             System.out.println("Dort ist keine Tür!");
+            umsehen();
         }
         else {
             
