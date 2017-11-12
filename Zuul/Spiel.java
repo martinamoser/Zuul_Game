@@ -183,12 +183,12 @@ public class Spiel
         spieler.dasGesamtgewichtBeträgt();
         }
         
-        
+        /*
         for( Befehl b : spieler.gibundoStack() )
         {
             System.out.println( b.gibBefehlswort() + " " + b.gibZweitesWort() ) ;
         }
-        
+        */
         
         return moechteBeenden;
     }

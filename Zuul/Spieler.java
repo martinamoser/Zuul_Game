@@ -15,7 +15,7 @@ public class Spieler
     private Raum aktuellerRaum;
     //private Raum ehemaligerRaum;
     private Raum naechsterRaum;
-    public Stack<Befehl> undoStack;
+    private Stack<Befehl> undoStack;
 
     /**
      * Konstruktor für Objekte der Klasse Spieler
