@@ -67,7 +67,7 @@ public class Spiel
        
         
         hoersaal.setzeGegenstände(new Gegenstand("Säbel", 4));
-        hoersaal.setzeGegenstände(new MagischerGegenstand("Muffin", -10, "Erhöht Tragkraft um 10 Einheiten"));
+        hoersaal.setzeGegenstände(new MagischerGegenstand("Muffin", -10, "ErhöhtTragkraft um 10 Einheiten"));
         
         
         // die Ausgänge initialisieren
@@ -221,12 +221,33 @@ public class Spiel
         boolean zweitesWortBekannt=false;
         if(!befehl.hatZweitesWort()) {
             sagenDassBefehlUnbekannt();
-        } else {
-            if(spieler.drop(befehl.gibZweitesWort()) && !undo)
-            spieler.gibundoStack().push( new Befehl("take", befehl.gibZweitesWort()));
-        }
+        } 
         
-
+        /*
+        else if(spieler.gibmeineGegenstaende().isEmpty())
+        {
+            System.out.println(spieler.gibNameSpieler()+", du hast im Moment gar keine Gegenstände.");
+        }
+        //wenn der Befehl gültig ist, testen, ob Gegenstand zu schwer
+            else {
+            for (int i=0; i<spieler.gibmeineGegenstaende().size(); i++)
+            {
+                if (spieler.gibmeineGegenstaende().get(i).getGegenstandBeschreibung().equalsIgnoreCase(befehl.gibZweitesWort()))
+                {
+                  spieler.gegenstandAblegen(spieler.gibmeineGegenstaende().get(i));
+                  if( !undo )
+                  {
+                     spieler.gibundoStack().push( new Befehl("take",befehl.gibZweitesWort()) ) ;
+                  }
+                  zweitesWortBekannt=true;
+                } 
+            }
+        } 
+        if (zweitesWortBekannt==false&&!spieler.gibmeineGegenstaende().isEmpty())
+                {
+                    System.out.println("Diesen Gegenstand gibt es nicht.");
+                }
+    */
     }
 
     /**
@@ -264,6 +285,13 @@ public class Spiel
             }
             
         }
+        
+
+        private void raumInfoAusgeben()
+        {
+        System.out.println(spieler.gibAktuellenRaum().gibLangeBeschreibung());
+        
+    }
 
     /**
      * "quit" wurde eingegeben. Überprüfe den Rest des Befehls,
@@ -294,27 +322,7 @@ public class Spiel
           {
           System.out.println("Sie sind ein Fressack, än Guete!");
         } 
-        /*
-        else if (!befehl.gibZweitesWort().equalsIgnoreCase("maffin"))
-        {
-            sagenDassBefehlUnbekannt();
-        } else
-        {
-            for (int i=0; i<spieler.gibAktuellenRaum().gibGegenstände().size(); i++)
-            {//falls das Magic Maffin im Raum ist:
-                if (spieler.gibAktuellenRaum().gibGegenstände().get(i).getGegenstandBeschreibung().equalsIgnoreCase(befehl.gibZweitesWort()))
-                {
-                   spieler.setzeNeueTragkraft();
-                   maffinImRaum=true;
- 
-                }
-            }
-            if(maffinImRaum==false)
-                {
-                    System.out.println("Sorry, hier gibt es kein Maffin!");
-                }
-         }
-*/
+
     }
     
     
