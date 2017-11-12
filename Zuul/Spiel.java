@@ -164,7 +164,7 @@ public class Spiel
             }
             else if(spieler.gibAktuellenRaum().gibBeschreibung().equalsIgnoreCase("im Keller"))
             {
-                System.out.println("Game Over");
+                System.out.println("Game Over, muhahahaaa!");
             }
             else
             { 

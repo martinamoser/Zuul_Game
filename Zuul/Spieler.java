@@ -167,7 +167,7 @@ public class Spieler
          // Wir versuchen, den Raum zu verlassen.
          if(aktuellerRaum.gibBeschreibung().equalsIgnoreCase("im Keller"))
          {
-             System.out.println("Sie kommen hier nicht mehr raus!");
+             System.out.println(spielername+ ", du kommst hier nicht mehr raus!");
              return false;
          } else {
         setzeNaechstenRaum(gibAktuellenRaum().gibAusgang(richtung));
@@ -183,7 +183,7 @@ public class Spieler
             if(aktuellerRaum.gibBeschreibung().equalsIgnoreCase("im Keller"))
             { 
                 undoStack.removeAllElements();
-                System.out.println("Muhaha, dies war eine Falltüre, du bist nur ewig hier gefangen!");
+                System.out.println("Muhaha, "+spielername+ ", dies war eine Falltüre, du bist nun ewig hier gefangen!");
                 return false;
             } else {
             raumInfoAusgeben();
