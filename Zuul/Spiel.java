@@ -37,6 +37,8 @@ public class Spiel
         map.put("south", "north");
         map.put("west", "east");
         map.put("east", "west");
+        map.put("up", "down");
+        map.put("down", "up");
         raeumeAnlegen();
         parser = new Parser();
         
@@ -48,7 +50,7 @@ public class Spiel
      */
     private void raeumeAnlegen()
     {
-        Raum draussen, hoersaal, cafeteria, labor, buero;
+        Raum draussen, hoersaal, cafeteria, labor, buero, keller;
       
         // die Räume erzeugen
         draussen = new Raum("vor dem Haupteingang der Universität");
@@ -56,6 +58,7 @@ public class Spiel
         cafeteria = new Raum("in der Cafeteria der Uni");
         labor = new Raum("in einem Rechnerraum");
         buero = new Raum("im Verwaltungsbüro der Informatik");
+        keller = new Raum("im Keller");
         
         //Gegenstände setzen
         draussen.setzeGegenstände(new Gegenstand("Messer", 1));
@@ -76,6 +79,8 @@ public class Spiel
         draussen.setzeAusgaenge("west", cafeteria);
         hoersaal.setzeAusgaenge("west", draussen);
         cafeteria.setzeAusgaenge("east", draussen);
+        cafeteria.setzeAusgaenge("down", keller);
+        keller.setzeAusgaenge("up", cafeteria);
         
         labor.setzeAusgaenge("north", draussen);
         labor.setzeAusgaenge("east", buero);
@@ -117,7 +122,7 @@ public class Spiel
         System.out.println("Zuul ist ein neues, unglaublich langweiliges Spiel.");
         System.out.println("Tippen sie 'help', wenn Sie Hilfe brauchen.");
         System.out.println();
-        raumInfoAusgeben();
+        spieler.raumInfoAusgeben();
 
     }
 
@@ -145,7 +150,7 @@ public class Spiel
             moechteBeenden = beenden(befehl);
         }
         else if (befehlswort.equals("look")) {
-            umsehen();
+           spieler.umsehen();
         }
         else if (befehlswort.equals("eat")) {
         essen(befehl);
@@ -156,6 +161,10 @@ public class Spiel
             if( stack.size() > 0 )
             {
                verarbeiteBefehl(stack.pop(),true);
+            }
+            else if(spieler.gibAktuellenRaum().gibBeschreibung().equalsIgnoreCase("im Keller"))
+            {
+                System.out.println("Game Over");
             }
             else
             { 
@@ -174,12 +183,12 @@ public class Spiel
         spieler.dasGesamtgewichtBeträgt();
         }
         
-        /*
+        
         for( Befehl b : spieler.gibundoStack() )
         {
             System.out.println( b.gibBefehlswort() + " " + b.gibZweitesWort() ) ;
         }
-        */
+        
         
         return moechteBeenden;
     }
@@ -218,7 +227,7 @@ public class Spiel
     
         private void drop(Befehl befehl,boolean undo)
     {
-        boolean zweitesWortBekannt=false;
+        /*boolean zweitesWortBekannt=false; */
         if(!befehl.hatZweitesWort()) {
             sagenDassBefehlUnbekannt();
         } else {
@@ -235,44 +244,24 @@ public class Spiel
      */
     private void wechsleRaum(Befehl befehl,boolean undo) 
     {
+        String richtung = befehl.gibZweitesWort();
         if(!befehl.hatZweitesWort()) {
             // Gibt es kein zweites Wort, wissen wir nicht, wohin...
             System.out.println("Wohin möchten Sie gehen?");
-            return;
-        }
-
-        String richtung = befehl.gibZweitesWort();
-
-        // Wir versuchen, den Raum zu verlassen.
-        spieler.setzeNaechstenRaum(spieler.gibAktuellenRaum().gibAusgang(richtung));
-
-        if (spieler.gibNaechstenRaum() == null) {
-            System.out.println("Dort ist keine Tür!");
-            umsehen();
-        }
-        else {
             
+        }  else {
             //ehemaligerRaum = aktuellerRaum; //ehemaligerRaum für back speichern
-            if( !undo )
+            if( spieler.go(befehl.gibZweitesWort())&&!undo )
+
             {
                 spieler.gibundoStack().push(new Befehl("go", map.get(richtung) ));
             }
-            spieler.setzeAktuellenRaum(spieler.gibNaechstenRaum());
-            //System.out.println(richtung);
-            raumInfoAusgeben();
-           
-            }
             
         }
-        
-
-        private void raumInfoAusgeben()
-        {
-        System.out.println(spieler.gibAktuellenRaum().gibLangeBeschreibung());
-        
+    
     }
 
-    /**
+   /**
      * "quit" wurde eingegeben. Überprüfe den Rest des Befehls,
      * ob das Spiel wirklich beendet werden soll.
      * @return 'true', wenn der Befehl das Spiel beendet, 'false' sonst.
@@ -288,10 +277,7 @@ public class Spiel
         }
     }
     
-    public void umsehen()
-    {
-        System.out.println(spieler.gibAktuellenRaum().gibLangeBeschreibung());
-    }
+
     //Befehl eat oder eat muffin
     
     

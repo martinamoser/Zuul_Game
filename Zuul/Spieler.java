@@ -15,7 +15,7 @@ public class Spieler
     private Raum aktuellerRaum;
     //private Raum ehemaligerRaum;
     private Raum naechsterRaum;
-    private Stack<Befehl> undoStack;
+    public Stack<Befehl> undoStack;
 
     /**
      * Konstruktor für Objekte der Klasse Spieler
@@ -160,6 +160,41 @@ public class Spieler
                     System.out.println("Diesen Gegenstand gibt es nicht.");
                     return false;
         }
+    }
+            
+    public boolean go(String richtung)
+    {
+         // Wir versuchen, den Raum zu verlassen.
+        setzeNaechstenRaum(gibAktuellenRaum().gibAusgang(richtung));
+
+        if (gibNaechstenRaum() == null) {
+            System.out.println("Dort ist keine Tür!");
+            umsehen();
+            return false;
+        }
+
+        else {
+            setzeAktuellenRaum(gibNaechstenRaum());
+            if(aktuellerRaum.gibBeschreibung().equalsIgnoreCase("im Keller"))
+            { 
+                undoStack.removeAllElements();
+                System.out.println("Muhaha, dies war eine Falltüre, du bist nur ewig hier gefangen!");
+                return false;
+            } else {
+            raumInfoAusgeben();
+            return true;
+            }
+        }
+            
+        }
+        public void raumInfoAusgeben()
+        {
+        System.out.println(gibAktuellenRaum().gibLangeBeschreibung());
+        
+    }
+        public void umsehen()
+    {
+        System.out.println(gibAktuellenRaum().gibLangeBeschreibung());
     }
 }
     
